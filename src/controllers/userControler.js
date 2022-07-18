@@ -11,6 +11,12 @@ const user = {
     const users = await userService.getAll();
     res.json(users);
   },
+
+  async getById(req, res) {
+    const { id } = req.params;
+    const { code, data } = await userService.getById(+id);
+    res.status(code).json(data);
+  },
 };
 
 module.exports = user;
