@@ -76,9 +76,6 @@ const post = {
     const isErrValid = validation(schemaUpdatedPost)(values);
     if (isErrValid) return { code: 400, data: { message: 'Some required fields are missing' } };
 
-    // const areCategoriesExist = await verifyCategoryExist(values.categoryIds);
-    // if (!areCategoriesExist) return { code: 400, data: { message: '"categoryIds" not found' } };
-
     const updatedValues = {
       title: values.title,
       content: values.content,
@@ -93,11 +90,29 @@ const post = {
         ],
       },
     );
-    // Promise.all(
-    //   areCategoriesExist.map(async ({ id }) => models.PostCategory
-    //   .create({ postId: updatedPost.id, categoryId: id })),
-    //   );
+
     return { code: 200, data: updatedPost };
+  },
+
+  async remove(postId, userId) {
+    const postToDeleted = await models.BlogPost.findByPk(postId);
+    if (!postToDeleted) return { code: 404, data: { message: 'Post does not exist' } };
+    if (postToDeleted.userId !== userId) {
+      return { code: 401, data: { message: 'Unauthorized user' } };
+    }
+    await models.PostCategory.destroy({ where: { postId } });
+    await models.BlogPost.destroy({ where: { id: postId } });
+    // const updatedPost = await models.BlogPost.findByPk(
+    //   postId,
+    //   {
+    //     include: [
+    //       { model: models.User, as: 'user', attributes: { exclude: ['password'] } }, 
+    //       { model: models.Category, as: 'categories' },
+    //     ],
+    //   },
+    // );
+
+    return { code: 204, data: '' };
   },
 };
 

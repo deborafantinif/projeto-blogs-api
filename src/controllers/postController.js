@@ -28,6 +28,15 @@ const post = {
     );
     res.status(code).json(data);
   },
+
+  async remove(req, res) {
+    const userId = authorization.getDataToken(req.headers.authorization);
+    const { code, data } = await postService.remove(
+      Number(req.params.id), 
+      Number(userId.data),
+    );
+    res.status(code).json(data);
+  },
 };
 
 module.exports = post;
