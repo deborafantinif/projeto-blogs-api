@@ -18,6 +18,16 @@ const post = {
     const { code, data } = await postService.getById(req.params.id);
     res.status(code).json(data);
   },
+
+  async update(req, res) {
+    const userId = authorization.getDataToken(req.headers.authorization);
+    const { code, data } = await postService.update(
+      req.body,
+      Number(req.params.id), 
+      Number(userId.data),
+    );
+    res.status(code).json(data);
+  },
 };
 
 module.exports = post;
