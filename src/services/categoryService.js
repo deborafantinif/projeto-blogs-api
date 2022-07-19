@@ -21,9 +21,9 @@ const category = {
     return { code: 201, data: newCategory };
   },
 
-  // async getAll() {
-  //   return models.User.findAll({ attributes: { exclude: ['password'] } });
-  // },
+  async getAll() {
+    return models.Category.findAll();
+  },
 };
 
 module.exports = category;
