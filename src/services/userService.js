@@ -45,6 +45,16 @@ const user = {
     const { password, ...restDataUser } = isFindUser;
     return { code: 200, data: restDataUser };
   },
+
+  async remove(id) {
+    const postByUser = await models.BlogPost.findAll({ where: { userId: id } }, { raw: true });
+
+    await Promise.all(
+      postByUser.map(async (post) => models.PostCategory.destroy({ where: { postId: post.id } })),
+    );
+    await models.BlogPost.destroy({ where: { userId: id } });
+    await models.User.destroy({ where: { id } });
+  },
 };
 
 module.exports = user;

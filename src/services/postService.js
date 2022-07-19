@@ -102,15 +102,6 @@ const post = {
     }
     await models.PostCategory.destroy({ where: { postId } });
     await models.BlogPost.destroy({ where: { id: postId } });
-    // const updatedPost = await models.BlogPost.findByPk(
-    //   postId,
-    //   {
-    //     include: [
-    //       { model: models.User, as: 'user', attributes: { exclude: ['password'] } }, 
-    //       { model: models.Category, as: 'categories' },
-    //     ],
-    //   },
-    // );
 
     return { code: 204, data: '' };
   },

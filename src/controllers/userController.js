@@ -1,3 +1,4 @@
+const authorization = require('../middlewares/authorization');
 const userService = require('../services/userService');
 
 const user = {
@@ -16,6 +17,12 @@ const user = {
     const { id } = req.params;
     const { code, data } = await userService.getById(+id);
     res.status(code).json(data);
+  },
+
+  async remove(req, res) {
+    const userId = authorization.getDataToken(req.headers.authorization);
+    await userService.remove(userId.data);
+    res.status(204).end();
   },
 };
 

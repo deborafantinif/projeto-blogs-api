@@ -6,6 +6,7 @@ const userRouter = Router();
 
 userRouter.get('/', authorization.auth, userController.getAll);
 userRouter.get('/:id', authorization.auth, userController.getById);
+userRouter.delete('/me', authorization.auth, userController.remove);
 userRouter.post('/', userController.create);
 
 module.exports = userRouter;
