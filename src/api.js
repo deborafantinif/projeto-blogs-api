@@ -3,6 +3,7 @@ const loginRouter = require('./routes/loginRouter');
 const userRouter = require('./routes/userRouter');
 const authorization = require('./middlewares/authorization');
 const categoryRouter = require('./routes/categoryRouter');
+const postRouter = require('./routes/postRouter');
 
 // ...
 
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use('/login', loginRouter);
 app.use('/user', userRouter);
 app.use('/categories', authorization, categoryRouter);
+app.use('/post', authorization, postRouter);
 
 // ...
 
