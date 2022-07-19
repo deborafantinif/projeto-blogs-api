@@ -50,6 +50,20 @@ const post = {
       },
     );
   },
+
+  async getById(id) {
+    const postByPk = await models.BlogPost.findByPk(
+      id,
+      {
+        include: [
+          { model: models.User, as: 'user', attributes: { exclude: ['password'] } }, 
+          { model: models.Category, as: 'categories' },
+        ],
+      },
+    );
+    if (!postByPk) return { code: 404, data: { message: 'Post does not exist' } };
+    return { code: 200, data: postByPk };
+  },
 };
 
 module.exports = post;

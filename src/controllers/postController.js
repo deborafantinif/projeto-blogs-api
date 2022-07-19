@@ -13,6 +13,11 @@ const post = {
     const posts = await postService.getAll();
     res.json(posts);
   },
+
+  async getById(req, res) {
+    const { code, data } = await postService.getById(req.params.id);
+    res.status(code).json(data);
+  },
 };
 
 module.exports = post;
