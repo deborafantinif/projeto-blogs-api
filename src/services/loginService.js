@@ -3,18 +3,18 @@ const models = require('../database/models');
 require('dotenv').config();
 
 const auth = {
-  async auth(email, password) {
-    if (!email || !password) {
+  async auth(email, pass) {
+    if (!email || !pass) {
       return { code: 400, data: { message: 'Some required fields are missing' } };
     }
   
     const user = await models.User.findOne({
-      where: { email, password },
+      where: { email, password: pass },
     });
   
     if (!user) return { code: 400, data: { message: 'Invalid fields' } };
-  
-    const token = jwt.sign({ data: email }, process.env.JWT_SECRET);
+    const { id } = user;
+    const token = jwt.sign({ data: id }, process.env.JWT_SECRET);
   
     return { code: 200, data: { token } };
   },

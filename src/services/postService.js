@@ -9,23 +9,34 @@ const schemaPost = Joi.object({
   categoryIds: Joi.array().required(),
 });
 
+const verifyCategoryExist = async (categories) => {
+  const findCategories = await Promise.all(
+    categories.map(async (category) => models.Category.findByPk(category, { raw: true })),
+    );
+  const areCategoriesExist = findCategories.filter((category) => category != null);
+
+  if (areCategoriesExist.length > 0) return areCategoriesExist;
+  return false;
+};
+
 const post = {
-  async create(values) {
+  async create(values, userId) {
     const isErrValid = validation(schemaPost)(values);
     if (isErrValid) return { code: 400, data: { message: 'Some required fields are missing' } };
 
-    const areCategoriesExist = values.categoryIds
-      .map(async (category) => models.Category.findByPk(category))
-      .filter(true);
+    const areCategoriesExist = await verifyCategoryExist(values.categoryIds);
     if (!areCategoriesExist) return { code: 400, data: { message: '"categoryIds" not found' } };
 
-    const { categoryIds, ...valuesByBlogPost } = values;
-    const newPost = await models.BlogPost.create(valuesByBlogPost);
+    const newPostValues = {
+      title: values.title,
+      content: values.content,
+      userId,
+    };
+    const newPost = await models.BlogPost.create(newPostValues);
     Promise.all(
-      categoryIds.map(async (categoryId) => models.PostCategory
-        .create({ postId: newPost.id, categoryId })),
-    );
-
+      areCategoriesExist.map(async ({ id }) => models.PostCategory
+      .create({ postId: newPost.id, categoryId: id })),
+      );
     return { code: 201, data: newPost };
   },
 

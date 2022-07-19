@@ -27,8 +27,9 @@ const user = {
     const isEmailAlreadyRegisted = await models.User.findOne({ where: { email: values.email } });
     if (isEmailAlreadyRegisted) return { code: 409, data: { message: 'User already registered' } };
 
-    await models.User.create(values);
-    const token = jwt.sign({ data: values.email }, process.env.JWT_SECRET);
+    const newUser = await models.User.create(values, { raw: true });
+    const { dataValues: { id } } = newUser;
+    const token = jwt.sign({ data: id }, process.env.JWT_SECRET);
 
     return { code: 201, data: { token } };
   },

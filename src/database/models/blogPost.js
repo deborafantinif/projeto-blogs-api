@@ -24,9 +24,11 @@ const attributes = {
   },
   published: {
     type: DataTypes.DATE,
+    defaultValue: new Date(),
   },
   updated: {
     type: DataTypes.DATE,
+    defaultValue: new Date(),
   }
 }
 

@@ -13,8 +13,8 @@ app.use(express.json());
 
 app.use('/login', loginRouter);
 app.use('/user', userRouter);
-app.use('/categories', authorization, categoryRouter);
-app.use('/post', authorization, postRouter);
+app.use('/categories', authorization.auth, categoryRouter);
+app.use('/post', authorization.auth, postRouter);
 
 // ...
 

@@ -1,8 +1,10 @@
+const authorization = require('../middlewares/authorization');
 const postService = require('../services/postService');
 
 const post = {
   async create(req, res) {
-    const { code, data } = await postService.create(req.body);
+    const userId = authorization.getDataToken(req.headers.authorization);
+    const { code, data } = await postService.create(req.body, userId.data);
 
     res.status(code).json(data);
   },

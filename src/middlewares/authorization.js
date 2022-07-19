@@ -13,4 +13,9 @@ const auth = async (req, res, next) => {
   }
 };
 
-module.exports = auth;
+const getDataToken = (token) => jwt.verify(token, process.env.JWT_SECRET);
+
+module.exports = {
+  auth,
+  getDataToken,
+};
