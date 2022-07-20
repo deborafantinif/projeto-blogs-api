@@ -37,6 +37,12 @@ const post = {
     );
     res.status(code).json(data);
   },
+
+  async search(req, res) {
+    console.log('caiu');
+    const data = await postService.search(req.query.q);
+    res.json(data);
+  },
 };
 
 module.exports = post;

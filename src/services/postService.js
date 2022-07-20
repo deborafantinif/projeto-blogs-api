@@ -1,7 +1,10 @@
 const Joi = require('joi');
+const Sequelize = require('sequelize');
 const models = require('../database/models');
 const validation = require('./validation');
 require('dotenv').config();
+
+const { Op } = Sequelize;
 
 const schemaPost = Joi.object({
   title: Joi.string().required(),
@@ -104,6 +107,25 @@ const post = {
     await models.BlogPost.destroy({ where: { id: postId } });
 
     return { code: 204, data: '' };
+  },
+
+  async search(search) {
+    if (search.length <= 0) {
+      return models.BlogPost.findAll(
+        { include: [
+            { model: models.User, as: 'user', attributes: { exclude: ['password'] } }, 
+            { model: models.Category, as: 'categories' },
+          ] },
+      );
+    }
+    return models.BlogPost.findAll({ where: { [Op.or]: [ 
+      { title: { [Op.like]: `%${search}%` } }, { content: { [Op.like]: `%${search}%` } },
+    ] },
+    include: [
+      { model: models.User, as: 'user', attributes: { exclude: ['password'] } }, 
+      { model: models.Category, as: 'categories' },
+    ],
+  });
   },
 };
 
